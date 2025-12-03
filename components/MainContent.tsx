@@ -15,8 +15,22 @@ export function MainContent() {
   const { companies, isLoading, error, resetData } = useCompanyData();
   const { addOrUpdateCompany } = useCompanyStore();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleResetData = async () => {
+    setIsResetting(true);
+    try {
+      await resetData();
+      setShowResetModal(false);
+    } catch (err) {
+      console.error('Error resetting data:', err);
+    } finally {
+      setIsResetting(false);
+    }
+  };
 
   const handleAddEntry = async (formData: CompanyFormData) => {
     setIsSubmitting(true);
@@ -93,7 +107,11 @@ export function MainContent() {
               </Alert>
             </div>
           ) : (
-            <CompanyTable companies={companies} onAddEntry={() => setShowAddModal(true)} />
+            <CompanyTable
+              companies={companies}
+              onAddEntry={() => setShowAddModal(true)}
+              onResetData={() => setShowResetModal(true)}
+            />
           )}
         </div>
       </div>
@@ -119,7 +137,11 @@ export function MainContent() {
               </div>
             ) : (
               <div style={{ minWidth: '100%', width: 'max-content' }}>
-                <CompanyTable companies={companies} onAddEntry={() => setShowAddModal(true)} />
+                <CompanyTable
+                  companies={companies}
+                  onAddEntry={() => setShowAddModal(true)}
+                  onResetData={() => setShowResetModal(true)}
+                />
               </div>
             )}
           </div>
@@ -142,6 +164,51 @@ export function MainContent() {
             onCancel={() => setShowAddModal(false)}
             isSubmitting={isSubmitting}
           />
+        </Modal.Body>
+      </Modal>
+
+      {/* Reset Data Confirmation Modal */}
+      <Modal show={showResetModal} onClose={() => setShowResetModal(false)} size="md">
+        <Modal.Header className='p-4'>Reset Company Data</Modal.Header>
+        <Modal.Body className='p-4'>
+          <div className="text-center">
+            <svg
+              className="mx-auto mb-4 h-14 w-14 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <h3 className="mb-5 text-lg font-normal text-gray-500">
+              Are you sure you want to reset all company data?
+            </h3>
+            <p className="mb-5 text-sm text-gray-500">
+              This will clear all stored data and reload fresh data from the API.
+              This action cannot be undone.
+            </p>
+            <div className="flex justify-center gap-4">
+              <Button
+                color="failure"
+                onClick={handleResetData}
+                disabled={isResetting}
+              >
+                {isResetting ? 'Resetting...' : 'Yes, Reset Data'}
+              </Button>
+              <Button
+                color="gray"
+                onClick={() => setShowResetModal(false)}
+                disabled={isResetting}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
         </Modal.Body>
       </Modal>
     </>

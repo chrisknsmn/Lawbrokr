@@ -11,9 +11,10 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 interface CompanyTableProps {
   companies: CompanyData[];
   onAddEntry?: () => void;
+  onResetData?: () => void;
 }
 
-export function CompanyTable({ companies, onAddEntry }: CompanyTableProps) {
+export function CompanyTable({ companies, onAddEntry, onResetData }: CompanyTableProps) {
   // Column definitions with useMemo to prevent unnecessary re-renders
   const columnDefs = useMemo<ColDef<CompanyData>[]>(
     () => [
@@ -71,16 +72,23 @@ export function CompanyTable({ companies, onAddEntry }: CompanyTableProps) {
 
   return (
     <div className="flex flex-col h-full w-full">
-      {/* Header with Add Entry Button */}
+      {/* Header with Action Buttons */}
       <div className="flex justify-between items-center p-4 bg-white border-b">
         <h3 className="text-lg font-semibold text-gray-900">
           Company Data ({companies.length} entries)
         </h3>
-        {onAddEntry && (
-          <Button onClick={onAddEntry} size="sm">
-            Add Entry
-          </Button>
-        )}
+        <div className="flex gap-2">
+          {onResetData && (
+            <Button onClick={onResetData} size="sm" color="failure">
+              Reset Data
+            </Button>
+          )}
+          {onAddEntry && (
+            <Button onClick={onAddEntry} size="sm">
+              Add Entry
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* AG Grid Table */}

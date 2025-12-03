@@ -127,8 +127,8 @@ export function MainContent() {
 
       {/* Add Entry Modal */}
       <Modal show={showAddModal} onClose={() => setShowAddModal(false)} size="3xl">
-        <Modal.Header>Add Company Entry</Modal.Header>
-        <Modal.Body>
+        <Modal.Header className='p-4'>Add Company Entry</Modal.Header>
+        <Modal.Body className='p-4'>
           {submitMessage && (
             <Alert
               color={submitMessage.type === 'success' ? 'success' : 'failure'}

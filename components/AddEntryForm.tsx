@@ -26,18 +26,19 @@ export function AddEntryForm({ onSubmit, onCancel, isSubmitting = false }: AddEn
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Company Name */}
-        <div>
-          <Label htmlFor="company" value="Company Name *" />
-          <TextInput
-            id="company"
-            {...register('company')}
-            color={errors.company ? 'failure' : undefined}
-            helperText={errors.company?.message}
-          />
-        </div>
+      {/* Company Name - Full Width */}
+      <div>
+        <Label htmlFor="company" value="Company Name *" />
+        <TextInput
+          id="company"
+          {...register('company')}
+          color={errors.company ? 'failure' : undefined}
+          helperText={errors.company?.message}
+        />
+      </div>
 
+      {/* Location Fields */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Country */}
         <div>
           <Label htmlFor="country" value="Country *" />
@@ -82,7 +83,10 @@ export function AddEntryForm({ onSubmit, onCancel, isSubmitting = false }: AddEn
             helperText={errors.zipcode?.message}
           />
         </div>
+      </div>
 
+      {/* Business Details */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Employees */}
         <div>
           <Label htmlFor="employees" value="Employees *" />
@@ -106,20 +110,23 @@ export function AddEntryForm({ onSubmit, onCancel, isSubmitting = false }: AddEn
             helperText={errors.revenue?.message}
           />
         </div>
+      </div>
 
-        {/* Website */}
-        <div>
-          <Label htmlFor="website" value="Website *" />
-          <TextInput
-            id="website"
-            type="url"
-            placeholder="https://example.com"
-            {...register('website')}
-            color={errors.website ? 'failure' : undefined}
-            helperText={errors.website?.message}
-          />
-        </div>
+      {/* Website - Full Width */}
+      <div>
+        <Label htmlFor="website" value="Website *" />
+        <TextInput
+          id="website"
+          type="url"
+          placeholder="https://example.com"
+          {...register('website')}
+          color={errors.website ? 'failure' : undefined}
+          helperText={errors.website?.message}
+        />
+      </div>
 
+      {/* Sales Rep and Date */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Sales Rep */}
         <div>
           <Label htmlFor="sales_rep" value="Sales Representative *" />

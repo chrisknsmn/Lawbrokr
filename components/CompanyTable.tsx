@@ -18,8 +18,8 @@ export function CompanyTable({ companies, onAddEntry, onResetData }: CompanyTabl
   // Column definitions with useMemo to prevent unnecessary re-renders
   const columnDefs = useMemo<ColDef<CompanyData>[]>(
     () => [
-      { field: 'company', headerName: 'Company', sortable: true, filter: true, flex: 1 },
-      { field: 'country', headerName: 'Country', sortable: true, filter: true, flex: 1 },
+      { field: 'company', headerName: 'Company', sortable: true, filter: true },
+      { field: 'country', headerName: 'Country', sortable: true, filter: true },
       { field: 'state', headerName: 'State', sortable: true, filter: true },
       { field: 'city', headerName: 'City', sortable: true, filter: true },
       { field: 'zipcode', headerName: 'Zipcode', sortable: true, filter: true },
@@ -38,7 +38,7 @@ export function CompanyTable({ companies, onAddEntry, onResetData }: CompanyTabl
         valueFormatter: (params) =>
           params.value ? `$${params.value.toLocaleString()}` : '',
       },
-      { field: 'website', headerName: 'Website', sortable: true, filter: true, flex: 1 },
+      { field: 'website', headerName: 'Website', sortable: true, filter: true },
       { field: 'sales_rep', headerName: 'Sales Rep', sortable: true, filter: true },
       {
         field: 'last_contacted',
@@ -53,7 +53,6 @@ export function CompanyTable({ companies, onAddEntry, onResetData }: CompanyTabl
         filter: true,
         cellRenderer: (params: { value: boolean }) => (params.value ? '✓' : '✗'),
       },
-      { field: 'notes', headerName: 'Notes', sortable: true, filter: true, flex: 2 },
     ],
     []
   );

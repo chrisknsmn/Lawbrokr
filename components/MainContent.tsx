@@ -123,7 +123,7 @@ export function MainContent() {
           <div className="min-h-[50vh] max-w-full">
             <BitcoinScatterChart />
           </div>
-          <div className='w-full min-h-[80vh] overflow-x-auto overflow-y-auto'>
+          <div className='w-full min-h-[80vh] h-[80vh] overflow-x-auto overflow-y-auto'>
             {isLoading ? (
               <div className="flex items-center justify-center h-full py-12">
                 <Spinner size="xl" />
@@ -136,7 +136,7 @@ export function MainContent() {
                 </Alert>
               </div>
             ) : (
-              <div style={{ minWidth: '100%', width: 'max-content' }}>
+              <div className="w-full h-full">
                 <CompanyTable
                   companies={companies}
                   onAddEntry={() => setShowAddModal(true)}

@@ -33,12 +33,11 @@ export function MainContent() {
           <div className="min-h-[50vh] max-w-full">
             <BitcoinScatterChart />
           </div>
-          <div className='max-w-full min-h-[80vh] overflow-scroll border-4'>
-            <CompanyTable companies={companies} />
+          <div className='w-full min-h-[80vh] overflow-x-auto overflow-y-auto border-4'>
+            <div style={{ minWidth: '100%', width: 'max-content' }}>
+              <CompanyTable companies={companies} />
+            </div>
           </div>
-          {/* <div className="min-h-[50vh] max-w-full">
-            <CompanyTable companies={companies} />
-          </div> */}
       </div>
     </>
   );

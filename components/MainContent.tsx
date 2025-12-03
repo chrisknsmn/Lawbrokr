@@ -1,13 +1,70 @@
 'use client';
 
-import { Spinner, Alert } from 'flowbite-react';
+import { useState } from 'react';
+import { Spinner, Alert, Button, Modal } from 'flowbite-react';
 import { BitcoinPriceChart } from '@/components/BitcoinPriceChart';
 import { BitcoinScatterChart } from '@/components/BitcoinScatterChart';
 import { CompanyTable } from '@/components/CompanyTable';
+import { AddEntryForm } from '@/components/AddEntryForm';
 import { useCompanyData } from '@/hooks/useCompanyData';
+import { useCompanyStore } from '@/store/companyStore';
+import { CompanyFormData } from '@/lib/validations/companySchema';
+import { CompanyData } from '@/types/company';
 
 export function MainContent() {
   const { companies, isLoading, error, resetData } = useCompanyData();
+  const { addOrUpdateCompany } = useCompanyStore();
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleAddEntry = async (formData: CompanyFormData) => {
+    setIsSubmitting(true);
+    setSubmitMessage(null);
+
+    try {
+      const companyData: CompanyData = {
+        company: formData.company,
+        country: formData.country,
+        state: formData.state,
+        city: formData.city,
+        zipcode: formData.zipcode,
+        employees: formData.employees,
+        revenue: formData.revenue,
+        website: formData.website,
+        sales_rep: formData.sales_rep,
+        last_contacted: formData.last_contacted,
+        purchased: formData.purchased,
+        notes: formData.notes || '',
+      };
+
+      const result = addOrUpdateCompany(companyData);
+
+      if (result.wasUpdated) {
+        setSubmitMessage({
+          type: 'success',
+          text: `Entry updated! 5+ fields matched an existing entry.`,
+        });
+      } else {
+        setSubmitMessage({
+          type: 'success',
+          text: 'New entry added successfully!',
+        });
+      }
+
+      setTimeout(() => {
+        setShowAddModal(false);
+        setSubmitMessage(null);
+      }, 2000);
+    } catch (err) {
+      setSubmitMessage({
+        type: 'error',
+        text: err instanceof Error ? err.message : 'Failed to save entry',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -23,7 +80,7 @@ export function MainContent() {
           </div>
         </div>
         {/* Bottom Section */}
-        <div className='h-half overflow-scroll border border-primary rounded-md'>
+        <div className='h-half overflow-scroll border rounded-md'>
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
               <Spinner size="xl" />
@@ -36,7 +93,7 @@ export function MainContent() {
               </Alert>
             </div>
           ) : (
-            <CompanyTable companies={companies} />
+            <CompanyTable companies={companies} onAddEntry={() => setShowAddModal(true)} />
           )}
         </div>
       </div>
@@ -62,11 +119,31 @@ export function MainContent() {
               </div>
             ) : (
               <div style={{ minWidth: '100%', width: 'max-content' }}>
-                <CompanyTable companies={companies} />
+                <CompanyTable companies={companies} onAddEntry={() => setShowAddModal(true)} />
               </div>
             )}
           </div>
       </div>
+
+      {/* Add Entry Modal */}
+      <Modal show={showAddModal} onClose={() => setShowAddModal(false)} size="3xl">
+        <Modal.Header>Add Company Entry</Modal.Header>
+        <Modal.Body>
+          {submitMessage && (
+            <Alert
+              color={submitMessage.type === 'success' ? 'success' : 'failure'}
+              className="mb-4"
+            >
+              {submitMessage.text}
+            </Alert>
+          )}
+          <AddEntryForm
+            onSubmit={handleAddEntry}
+            onCancel={() => setShowAddModal(false)}
+            isSubmitting={isSubmitting}
+          />
+        </Modal.Body>
+      </Modal>
     </>
   );
 }

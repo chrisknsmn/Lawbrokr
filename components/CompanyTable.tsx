@@ -3,15 +3,17 @@
 import { useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
+import { Button } from 'flowbite-react';
 import { CompanyData } from '@/types/company';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 interface CompanyTableProps {
   companies: CompanyData[];
+  onAddEntry?: () => void;
 }
 
-export function CompanyTable({ companies }: CompanyTableProps) {
+export function CompanyTable({ companies, onAddEntry }: CompanyTableProps) {
   // Column definitions with useMemo to prevent unnecessary re-renders
   const columnDefs = useMemo<ColDef<CompanyData>[]>(
     () => [
@@ -68,15 +70,30 @@ export function CompanyTable({ companies }: CompanyTableProps) {
   const rowData = useMemo(() => companies, [companies]);
 
   return (
-    <div className="ag-theme-alpine" style={{ height: 600, width: '100%' }}>
-      <AgGridReact
-        rowData={rowData}
-        columnDefs={columnDefs}
-        defaultColDef={defaultColDef}
-        pagination={true}
-        paginationPageSize={10}
-        animateRows={true}
-      />
+    <div className="flex flex-col h-full w-full">
+      {/* Header with Add Entry Button */}
+      <div className="flex justify-between items-center p-4 bg-white border-b">
+        <h3 className="text-lg font-semibold text-gray-900">
+          Company Data ({companies.length} entries)
+        </h3>
+        {onAddEntry && (
+          <Button onClick={onAddEntry} size="sm">
+            Add Entry
+          </Button>
+        )}
+      </div>
+
+      {/* AG Grid Table */}
+      <div className="ag-theme-alpine flex-1" style={{ width: '100%', minHeight: 500 }}>
+        <AgGridReact
+          rowData={rowData}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          pagination={true}
+          paginationPageSize={10}
+          animateRows={true}
+        />
+      </div>
     </div>
   );
 }
